@@ -12,12 +12,8 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 def ColourDistance(colourA: (int, int, int), colourB: (int, int, int)) -> float:
-    return ((colourA[0]-colourB[0])**2 + (colourA[1]-colourB[1])**2 + (colourA[2]-colourB[2])**2)**0.5
+    return ( (colourA[0]-colourB[0])**2 + (colourA[1]-colourB[1])**2 + (colourA[2]-colourB[2])**2 ) **0.5
 
-
-print(ColourDistance(WHITE, BLACK))
-
-sys.exit(1)
 
 
 pygame.init()
@@ -32,5 +28,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEMOTION:
+            print(event.pos)
+
 
 pygame.quit()
