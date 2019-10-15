@@ -29,7 +29,6 @@ class LevelData(Enum):
     SHRINE = auto()
 
 
-
 __author__ = "Matthew Shaw"
 
 size_of_tiles = (16, 16)
@@ -41,11 +40,14 @@ mario_jump_length = 6
 
 LevelImages = ["" for x in range(len(LevelData))]
 
+# Load all the images, by referencing the enum name
 for item in LevelData:
-    print(item.value)
-    LevelImages[item.value-1] = Image.open("data/" + item.name.lower() + ".png")
+    try:
+        LevelImages[item.value-1] = Image.open("data/" + item.name.lower() + ".png")
+    except FileNotFoundError:
+        print("File data/" + item.name.lower() + ".png could not be found. Is it in the correct folder, and named accordingly?")
+        exit(1)
 
-print(LevelImages)
 
 # Create the final image to export
 level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1] * size_of_level[1]))
@@ -73,7 +75,6 @@ if random.random() < 0.5:  # Generate pitfalls
     pitfall_width = random.randrange(2, mario_jump_length)
     pitfall_y = 3
     pitfall_x = random.randint(0, size_of_level[0] - pitfall_width)
-    print("adding pitfall with width", pitfall_width, "at", pitfall_x, pitfall_y)
     level_data[pitfall_x][pitfall_y] = LevelData.PITFALLLEFT
     level_data[pitfall_width + pitfall_x - 1][pitfall_y] = LevelData.PITFALLRIGHT
     for i in range(pitfall_width - 2):
