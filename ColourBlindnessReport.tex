@@ -1,0 +1,31 @@
+\documentclass{Report}
+\usepackage[utf8]{inputenc}
+\usepackage{relsize}
+\usepackage[backend=bibtex,style=verbose-trad2]{biblatex}
+\bibliography{COMP120} 
+
+\newcommand{\subtitlerelsize}{1} %relative size: integer value
+\newcommand{\subtitlelinesep}{0.2em} %line separation: a LaTeX length
+
+\title{Colour Blindness Report\\[\subtitlelinesep]\smaller[\subtitlerelsize]{}COMP120 Tinkering Graphics}
+\author{James Arthur}
+\date{October 2019}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Colour Blindness or Colour Deficiency, affects 1 in 12 men and 1 in 200 women across the world.\autocite[1]{CBA} This means that there are 3 million people in the UK that are colourblind. Colour Blindness is usually a genetic fault on chromosomes, the overpowering bias towards males in the figures is due to the most common form of Colour Blindness, red-green, being tranferred through the X Chromosome.\autocite[2]{copsin} On the opposing side, an injury can induce Colour Blindness, these include: Eye Diseases (Gluacoma and Macular Degeneration), Brain and Nervous System Diseases (Alzheimers or multiple Sclerosis) or alternatively there are some types of medicines with side effects as Colour Blindness, such as Planquenil, a rheumatiod arthritis medicine. \autocite[3]{NIH}\\\\
+
+There are many different types of Colour Blindness, I shall strive to create an algorithm to simulate every type of Colour Blindness. The types depend on how many of the cone types are defficient.  You have Anomalous Trichromacy in which one type of cone is defficient, Dichromacy is where two of the cones are completely defficient and Monochromacy where the patient only sees no colour, usually greyscale vision.\autocite[4]{Types} It can also be noted that some people describe that Colour Blindness as the confusion of different colours, this is seen in some of my code. \autocite[5]{NHS} \\\\
+
+In this report I shall set out my work to produce an a couple of algorithms to simulate all the different types of Colour Blindness, they have all be produced in PyCharm 2019.2.3 using PyGame 1.9.4 in Python 3.7. The image that I shall be using is one that I have taken, it requires no citing.
+
+
+\newpage
+
+\printbibliography
+
+\end{document}
