@@ -4,7 +4,7 @@ import random
 
 __author__ = "Matthew Shaw"
 
-size_of_tiles = (16,16)
+size_of_tiles = (16, 16)
 size_of_level = (30, 10)
 
 generator_mode = "mario"
@@ -54,10 +54,10 @@ for path in pot_paths:
     pot_images.append(Image.open(path))
 
 # Create the final image to export
-level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1]*size_of_level[1]))
+level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1] * size_of_level[1]))
 
 # Create a list to hold the final level data
-level_data = [["" for y in range(size_of_level[1])] for y in range(size_of_level[0])]
+level_data = [["" for y in range(size_of_level[1])] for x in range(size_of_level[0])]
 
 # Create a base terrain (grass level is at 3, below is dirt, above is sky)
 for x in range(len(level_data)):
@@ -80,10 +80,10 @@ for x in range(len(level_data)):
 if random.random() < 0.5:  # Generate pitfalls
     pitfall_width = random.randrange(2, mario_jump_length)
     pitfall_y = 3
-    pitfall_x = random.randint(0, size_of_level[0]-pitfall_width)
+    pitfall_x = random.randint(0, size_of_level[0] - pitfall_width)
     print("adding pitfall with width", pitfall_width, "at", pitfall_x, pitfall_y)
-    level_data[pitfall_x][pitfall_y] = "pitfallstart"
-    level_data[pitfall_width + pitfall_x - 1][pitfall_y] = "pitfallend"
+    level_data[pitfall_x][pitfall_y] = "pitfallleft"
+    level_data[pitfall_width + pitfall_x - 1][pitfall_y] = "pitfallright"
     for i in range(pitfall_width - 2):
         level_data[i+pitfall_x + 1][pitfall_y] = "dirt"
 
@@ -91,7 +91,10 @@ if random.random() < 0.5:  # Generate Shrines
     pass
 
 if random.random() < 0.5:  # Generate Wells
-    pass
+    well_x = random.randint(0, size_of_level[0] - 2)
+    well_y = 3
+    level_data[well_x][well_y] = "wellleft"
+    level_data[well_x + 1][well_y] = "wellright"
 
 if random.random() < 0.5:  # Generate Water
     pass
@@ -115,11 +118,17 @@ for x in range(size_of_level[0]):
         elif level_data[x][y] == "dirt":
             level.paste(dirt_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
 
-        elif level_data[x][y] == "pitfallstart":
+        elif level_data[x][y] == "pitfallleft":
             level.paste(pitfall_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
 
-        elif level_data[x][y] == "pitfallend":
+        elif level_data[x][y] == "pitfallright":
             level.paste(pitfall_images[1], (x * size_of_tiles[0], y * size_of_tiles[1]))
+
+        elif level_data[x][y] == "wellleft":
+            level.paste(well_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
+
+        elif level_data[x][y] == "wellright":
+            level.paste(well_images[1], (x * size_of_tiles[0], y * size_of_tiles[1]))
 
 # Show and save
 level.show()
