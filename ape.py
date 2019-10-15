@@ -1,6 +1,34 @@
+"""Contract #2: Platformer Level Generator
+
+This script will attempt to solve contract #2, using PIL to load and render out the images,
+as PIL > PyGame for these sorts of image editing tasks
+"""
+
+"""TODO:
++ Add support for Water, Pools and Pots
++ Add final graphics
++ Add argparse support
++ Add support for multiple level types
+* Add checking to see if the level already has an item at the chosen position
++ Add support for colour palettes 
+"""
+
 from PIL import Image
+from enum import auto, Enum
 import argparse
 import random
+
+class LevelData(Enum):
+    GRASS = auto()
+    SKY = auto()
+    DIRT = auto()
+    PITFALLLEFT = auto()
+    PITFALLRIGHT = auto()
+    WELLLEFT = auto()
+    WELLRIGHT = auto()
+    SHRINE = auto()
+
+
 
 __author__ = "Matthew Shaw"
 
@@ -11,47 +39,13 @@ generator_mode = "mario"
 mario_jump_height = 5
 mario_jump_length = 6
 
-# Locations of the image resources
-grass_paths = ["data/grass.png"]
-dirt_paths = ["data/dirt.png"]
-sky_paths = ["data/sky.png"]
-pitfall_paths = ["data/pitfallleft.png", "data/pitfallright.png"]
-shrine_paths = ["data/shrine.png"]
-well_paths = ["data/wellleft.png", "data/wellright.png"]
-water_paths = ["data/water.png"]
-pool_paths = ["data/poolleft.png", "data/poolright.png"]
-pot_paths = ["data/pot.png"]
+LevelImages = ["" for x in range(len(LevelData))]
 
-# Lists of the loaded images
-grass_images = []
-dirt_images = []
-sky_images = []
-pitfall_images = []
-shrine_images = []
-well_images = []
-water_images = []
-pool_images = []
-pot_images = []
+for item in LevelData:
+    print(item.value)
+    LevelImages[item.value-1] = Image.open("data/" + item.name.lower() + ".png")
 
-#Load all the images
-for path in grass_paths:
-    grass_images.append(Image.open(path))
-for path in dirt_paths:
-    dirt_images.append(Image.open(path))
-for path in sky_paths:
-    sky_images.append(Image.open(path))
-for path in pitfall_paths:
-    pitfall_images.append(Image.open(path))
-for path in shrine_paths:
-    shrine_images.append(Image.open(path))
-for path in well_paths:
-    well_images.append(Image.open(path))
-for path in water_paths:
-    water_images.append(Image.open(path))
-for path in pool_paths:
-    pool_images.append(Image.open(path))
-for path in pot_paths:
-    pot_images.append(Image.open(path))
+print(LevelImages)
 
 # Create the final image to export
 level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1] * size_of_level[1]))
@@ -63,16 +57,14 @@ level_data = [["" for y in range(size_of_level[1])] for x in range(size_of_level
 for x in range(len(level_data)):
     for y in range(len(level_data[0])):
         if y < 3:
-            level_data[x][y] = "sky"
+            level_data[x][y] = LevelData.SKY
         elif y == 3:
-            level_data[x][y] = "grass"
+            level_data[x][y] = LevelData.GRASS
         else:
-            level_data[x][y] = "dirt"
+            level_data[x][y] = LevelData.DIRT
 
 # Create level data here
-# pitfalls
 # shrines
-# wells
 # water
 # pools
 # pots
@@ -82,19 +74,22 @@ if random.random() < 0.5:  # Generate pitfalls
     pitfall_y = 3
     pitfall_x = random.randint(0, size_of_level[0] - pitfall_width)
     print("adding pitfall with width", pitfall_width, "at", pitfall_x, pitfall_y)
-    level_data[pitfall_x][pitfall_y] = "pitfallleft"
-    level_data[pitfall_width + pitfall_x - 1][pitfall_y] = "pitfallright"
+    level_data[pitfall_x][pitfall_y] = LevelData.PITFALLLEFT
+    level_data[pitfall_width + pitfall_x - 1][pitfall_y] = LevelData.PITFALLRIGHT
     for i in range(pitfall_width - 2):
-        level_data[i+pitfall_x + 1][pitfall_y] = "dirt"
+        level_data[i+pitfall_x + 1][pitfall_y] = LevelData.DIRT
 
 if random.random() < 0.5:  # Generate Shrines
+    shrine_x = random.randint(0, size_of_level[0])
+    shrine_y = 2
+    level_data[shrine_x][shrine_y] = LevelData.SHRINE
     pass
 
 if random.random() < 0.5:  # Generate Wells
     well_x = random.randint(0, size_of_level[0] - 2)
     well_y = 3
-    level_data[well_x][well_y] = "wellleft"
-    level_data[well_x + 1][well_y] = "wellright"
+    level_data[well_x][well_y] = LevelData.WELLLEFT
+    level_data[well_x + 1][well_y] = LevelData.WELLRIGHT
 
 if random.random() < 0.5:  # Generate Water
     pass
@@ -108,27 +103,7 @@ if random.random() < 0.5:  # Generate Pots
 # Render out the level data to the final level image
 for x in range(size_of_level[0]):
     for y in range(size_of_level[1]):
-
-        if level_data[x][y] == "sky":
-            level.paste(sky_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
-
-        elif level_data[x][y] == "grass":
-            level.paste(grass_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
-
-        elif level_data[x][y] == "dirt":
-            level.paste(dirt_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
-
-        elif level_data[x][y] == "pitfallleft":
-            level.paste(pitfall_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
-
-        elif level_data[x][y] == "pitfallright":
-            level.paste(pitfall_images[1], (x * size_of_tiles[0], y * size_of_tiles[1]))
-
-        elif level_data[x][y] == "wellleft":
-            level.paste(well_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
-
-        elif level_data[x][y] == "wellright":
-            level.paste(well_images[1], (x * size_of_tiles[0], y * size_of_tiles[1]))
+        level.paste(LevelImages[level_data[x][y].value - 1], (x * size_of_tiles[0], y * size_of_tiles[1]))
 
 # Show and save
 level.show()
