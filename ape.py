@@ -11,6 +11,7 @@ generator_mode = "mario"
 mario_jump_height = 5
 mario_jump_length = 6
 
+# Locations of the image resources
 grass_paths = ["data/grass.png"]
 dirt_paths = ["data/dirt.png"]
 sky_paths = ["data/sky.png"]
@@ -21,7 +22,7 @@ water_paths = ["data/water.png"]
 pool_paths = ["data/poolleft.png", "data/poolright.png"]
 pot_paths = ["data/pot.png"]
 
-
+# Lists of the loaded images
 grass_images = []
 dirt_images = []
 sky_images = []
@@ -32,6 +33,7 @@ water_images = []
 pool_images = []
 pot_images = []
 
+#Load all the images
 for path in grass_paths:
     grass_images.append(Image.open(path))
 for path in dirt_paths:
@@ -51,10 +53,13 @@ for path in pool_paths:
 for path in pot_paths:
     pot_images.append(Image.open(path))
 
+# Create the final image to export
 level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1]*size_of_level[1]))
 
+# Create a list to hold the final level data
 level_data = [["" for y in range(size_of_level[1])] for y in range(size_of_level[0])]
 
+# Create a base terrain (grass level is at 3, below is dirt, above is sky)
 for x in range(len(level_data)):
     for y in range(len(level_data[0])):
         if y < 3:
@@ -97,20 +102,27 @@ if random.random() < 0.5:  # Generate Pools
 if random.random() < 0.5:  # Generate Pots
     pass
 
-
+# Render out the level data to the final level image
 for x in range(size_of_level[0]):
     for y in range(size_of_level[1]):
+
         if level_data[x][y] == "sky":
             level.paste(sky_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
+
         elif level_data[x][y] == "grass":
             level.paste(grass_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
+
         elif level_data[x][y] == "dirt":
             level.paste(dirt_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
+
         elif level_data[x][y] == "pitfallstart":
             level.paste(pitfall_images[0], (x * size_of_tiles[0], y * size_of_tiles[1]))
+
         elif level_data[x][y] == "pitfallend":
             level.paste(pitfall_images[1], (x * size_of_tiles[0], y * size_of_tiles[1]))
 
-
+# Show and save
 level.show()
 level.save("level.png")
+
+# 7582 ♥
