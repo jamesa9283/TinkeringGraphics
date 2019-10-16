@@ -17,7 +17,7 @@ from PIL import Image
 from enum import auto, Enum
 import argparse
 import random
-from . import Perlin
+import Perlin
 
 
 class LevelData(Enum):
@@ -34,7 +34,7 @@ class LevelData(Enum):
 __author__ = "Matthew Shaw"
 
 size_of_tiles = (16, 16)
-size_of_level = (30, 10)
+size_of_level = (100, 100)
 
 generator_mode = "mario"
 mario_jump_height = 5
@@ -56,66 +56,23 @@ for item in LevelData:
 # Create the final image to export
 level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1] * size_of_level[1]), (82, 192, 255))
 
-# Create a list to hold the final level data
-level_data = [["" for y in range(size_of_level[1])] for x in range(size_of_level[0])]
-
-# Create a base terrain (grass level is at 3, below is dirt, above is sky)
-for x in range(len(level_data)):
-    for y in range(len(level_data[0])):
-        if y < grass_height:
-            level_data[x][y] = LevelData.SKY
-        elif y == grass_height:
-            level_data[x][y] = LevelData.GRASS
-        else:
-            level_data[x][y] = LevelData.DIRT
 
 # Create level data here
 # water
 # pools
 # pots
 
-if random.random() < 1:  # Generate pitfalls
-    pitfall_width = random.randrange(2, mario_jump_length)
-    pitfall_y = grass_height
-    pitfall_x = random.randint(0, size_of_level[0] - pitfall_width)
-    level_data[pitfall_x][pitfall_y] = LevelData.PITFALLLEFT
-    level_data[pitfall_width + pitfall_x - 1][pitfall_y] = LevelData.PITFALLRIGHT
-    for i in range(pitfall_width - 2):
-        for j in range(size_of_level[1]-grass_height):
-            level_data[i+pitfall_x + 1][pitfall_y + j] = LevelData.SKY
-
-if random.random() < 0.5:  # Generate Shrines
-    shrine_x = random.randint(0, size_of_level[0])
-    shrine_y = grass_height - 1
-    level_data[shrine_x][shrine_y] = LevelData.SHRINE
-    pass
-
-if random.random() < 0.5:  # Generate Wells
-    well_x = random.randint(0, size_of_level[0] - 2)
-    well_y = grass_height
-    level_data[well_x][well_y] = LevelData.WELLLEFT
-    level_data[well_x + 1][well_y] = LevelData.WELLRIGHT
-
-if random.random() < 0.5:  # Generate Water
-    pass
-
-if random.random() < 0.5:  # Generate Pools
-    pass
-
-if random.random() < 0.5:  # Generate Pots
-    pass
-
-# Render out the level data to the final level image
-for x in range(size_of_level[0]):
-    for y in range(size_of_level[1]):
-        level.paste(LevelImages[level_data[x][y].value - 1], (x * size_of_tiles[0], y * size_of_tiles[1]), LevelImages[level_data[x][y].value - 1].convert('RGBA'))
 
 # Show and save
 # level.show()
 # level.save("level.png")
 
 perlinGenerator = Perlin.SimplexNoise()
-perlinGenerator.noise2()
 
+for x in range(size_of_level[0]):
+    for y in range(size_of_level[1]):
+        level.paste(LevelImages[LevelData.DIRT.value-1] if perlinGenerator.noise2(x/20, y/20) < 0.05 else LevelImages[LevelData.SKY.value-1], (x * size_of_tiles[0], y * size_of_tiles[1]))
+
+level.show()
 
 # 7582 ♥
