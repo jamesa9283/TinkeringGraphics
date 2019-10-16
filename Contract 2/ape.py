@@ -17,6 +17,8 @@ from PIL import Image
 from enum import auto, Enum
 import argparse
 import random
+from . import Perlin
+
 
 class LevelData(Enum):
     GRASS = auto()
@@ -109,7 +111,11 @@ for x in range(size_of_level[0]):
         level.paste(LevelImages[level_data[x][y].value - 1], (x * size_of_tiles[0], y * size_of_tiles[1]), LevelImages[level_data[x][y].value - 1].convert('RGBA'))
 
 # Show and save
-level.show()
-level.save("level.png")
+# level.show()
+# level.save("level.png")
+
+perlinGenerator = Perlin.SimplexNoise()
+perlinGenerator.noise2()
+
 
 # 7582 ♥

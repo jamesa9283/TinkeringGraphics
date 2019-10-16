@@ -11,31 +11,31 @@ Protanopia = []
 Deuteranopia = []
 Tritanopia = []
 Tritanomaly = []
-for x in range(img.size[1]):
+for x in range(img.size[0]):
     colour = [x/255 for x in imgData[x, 0]]
     Normal.append(int(round(colorsys.rgb_to_hsv(colour[0], colour[1], colour[2])[0]*255)))
 
-for x in range(img.size[1]):
+for x in range(img.size[0]):
     colour = [x/255 for x in imgData[x, 21]]
     Deuteranomaly.append(int(round(colorsys.rgb_to_hsv(colour[0], colour[1], colour[2])[0]*255)))
 
-for x in range(img.size[1]):
+for x in range(img.size[0]):
     colour = [x/255 for x in imgData[x, 42]]
     Protanomaly.append(int(round(colorsys.rgb_to_hsv(colour[0], colour[1], colour[2])[0]*255)))
 
-for x in range(img.size[1]):
+for x in range(img.size[0]):
     colour = [x/255 for x in imgData[x, 63]]
     Protanopia.append(int(round(colorsys.rgb_to_hsv(colour[0], colour[1], colour[2])[0]*255)))
 
-for x in range(img.size[1]):
-    colour = [x/255 for x in imgData[x, 103]]
+for x in range(img.size[0]):
+    colour = [x/255 for x in imgData[x, 84]]
     Deuteranopia.append(int(round(colorsys.rgb_to_hsv(colour[0], colour[1], colour[2])[0]*255)))
 
-for x in range(img.size[1]):
-    colour = [x/255 for x in imgData[x, 21]]
+for x in range(img.size[0]):
+    colour = [x/255 for x in imgData[x, 103]]
     Tritanopia.append(int(round(colorsys.rgb_to_hsv(colour[0], colour[1], colour[2])[0]*255)))
 
-for x in range(img.size[1]):
+for x in range(img.size[0]):
     colour = [x/255 for x in imgData[x, 118]]
     Tritanomaly.append(int(round(colorsys.rgb_to_hsv(colour[0], colour[1], colour[2])[0]*255)))
 
