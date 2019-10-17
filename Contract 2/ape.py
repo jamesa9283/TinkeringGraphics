@@ -5,10 +5,9 @@ as PIL > PyGame for these sorts of image editing tasks
 """
 
 """TODO:
-+ Add support for Water, Pools and Pots
++ Add support for Wells and Shrines
 + Add final graphics
 + Add argparse support
-+ Add support for multiple level types
 * Add checking to see if the level already has an item at the chosen position
 + Add support for colour palettes 
 """
@@ -25,19 +24,20 @@ class LevelData(Enum):
     GRASS = auto()
     SKY = auto()
     DIRT = auto()
-    PITFALLLEFT = auto()
-    PITFALLRIGHT = auto()
     WELLLEFT = auto()
     WELLRIGHT = auto()
     SHRINE = auto()
+    WATER = auto()
+    POT = auto()
 
 
 __author__ = "Matthew Shaw"
 
 size_of_tiles = (16, 16)
-size_of_level = (100, 100)
+size_of_level = (300, 300)
 
 grass_height = 5
+
 
 LevelImages = ["" for x in range(len(LevelData))]
 
@@ -56,11 +56,71 @@ for item in LevelData:
 # Create the final image to export
 level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1] * size_of_level[1]), (82, 192, 255))
 
-
+# Create a list to hold the final level data, and initialise everything to sky
+level_data = [[LevelData.SKY for y in range(size_of_level[1])] for x in range(size_of_level[0])]
 
 for x in range(size_of_level[0]):
     for y in range(size_of_level[1]):
-        level.paste(LevelImages[LevelData.DIRT.value-1] if perlinGenerator.noise2d(x/20, y/20) < 0.05 else LevelImages[LevelData.SKY.value-1], (x * size_of_tiles[0], y * size_of_tiles[1]))
+        # Check if we need to place terrain
+        if perlinGenerator.noise2d(x/20, y/20) < 0.0001:
+            # If it is sky above here, then place grass
+            if perlinGenerator.noise2d(x/20, (y-1)/20) >= 0.0001:
+                level_data[x][y] = LevelData.GRASS
+            else:
+                level_data[x][y] = LevelData.DIRT
+
+# Add water
+for i in range(10000):
+    point = [random.randrange(0, size_of_level[0]), random.randrange(0, size_of_level[1])]
+    try:
+        if level_data[point[0]][point[1]] == LevelData.SKY and level_data[point[0]][point[1]+1] == LevelData.GRASS:
+            # We found sky, start making water
+            while True:
+                try:
+                    while level_data[point[0]][point[1]+1] == LevelData.SKY or level_data[point[0]][point[1]+1] == LevelData.WATER:
+                        point[1] += 1
+                        level_data[point[0]][point[1]] = LevelData.WATER
+
+                    if level_data[point[0] + 1][point[1] + 1] == LevelData.SKY and level_data[point[0]][point[1]] == LevelData.GRASS:
+                        level_data[point[0]+1][point[1]] = LevelData.WATER
+                        level_data[point[0]+1][point[1]+1] = LevelData.WATER
+                        point[0] += 1
+                        point[1] += 1
+
+                    if level_data[point[0] - 1][point[1] + 1] == LevelData.SKY and level_data[point[0]][point[1]] == LevelData.GRASS:
+                        level_data[point[0] - 1][point[1]] = LevelData.WATER
+                        level_data[point[0] - 1][point[1] + 1] = LevelData.WATER
+                        point[0] -= 1
+                        point[1] += 1
+
+                    if level_data[point[0]+1][point[1]] == LevelData.SKY:
+                        point[0] += 1
+                        level_data[point[0]][point[1]] = LevelData.WATER
+                    elif level_data[point[0]-1][point[1]] == LevelData.SKY:
+                        point[0] -= 1
+                        level_data[point[0]][point[1]] = LevelData.WATER
+                    else:
+                        break
+                except IndexError:
+                    break
+    except IndexError:
+        continue
+
+
+for i in range(3000):
+    point = [random.randrange(0, size_of_level[0]), random.randrange(0, size_of_level[1])]
+    try:
+        if level_data[point[0]][point[1]] == LevelData.SKY and level_data[point[0]][point[1] + 1] == LevelData.GRASS:
+            level_data[point[0]][point[1]] = LevelData.POT
+    except ValueError:
+        continue
+    except IndexError:
+        continue
+
+# Write the level data to the image
+for x in range(size_of_level[0]):
+    for y in range(size_of_level[1]):
+        level.paste(LevelImages[level_data[x][y].value - 1], (x * size_of_tiles[0], y * size_of_tiles[1]), LevelImages[level_data[x][y].value - 1].convert('RGBA'))
 
 level.show()
 
