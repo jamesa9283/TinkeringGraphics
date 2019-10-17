@@ -17,7 +17,8 @@ from PIL import Image
 from enum import auto, Enum
 import argparse
 import random
-import Perlin
+from opensimplex import OpenSimplex
+from datetime import datetime
 
 
 class LevelData(Enum):
@@ -36,13 +37,12 @@ __author__ = "Matthew Shaw"
 size_of_tiles = (16, 16)
 size_of_level = (100, 100)
 
-generator_mode = "mario"
-mario_jump_height = 5
-mario_jump_length = 6
-
 grass_height = 5
 
 LevelImages = ["" for x in range(len(LevelData))]
+
+# Create perlin noise generator with seed set to the current utc time
+perlinGenerator = OpenSimplex(int(round((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds())))
 
 # Load all the images, by referencing the enum name
 for item in LevelData:
@@ -57,21 +57,10 @@ for item in LevelData:
 level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1] * size_of_level[1]), (82, 192, 255))
 
 
-# Create level data here
-# water
-# pools
-# pots
-
-
-# Show and save
-# level.show()
-# level.save("level.png")
-
-perlinGenerator = Perlin.SimplexNoise()
 
 for x in range(size_of_level[0]):
     for y in range(size_of_level[1]):
-        level.paste(LevelImages[LevelData.DIRT.value-1] if perlinGenerator.noise2(x/20, y/20) < 0.05 else LevelImages[LevelData.SKY.value-1], (x * size_of_tiles[0], y * size_of_tiles[1]))
+        level.paste(LevelImages[LevelData.DIRT.value-1] if perlinGenerator.noise2d(x/20, y/20) < 0.05 else LevelImages[LevelData.SKY.value-1], (x * size_of_tiles[0], y * size_of_tiles[1]))
 
 level.show()
 
