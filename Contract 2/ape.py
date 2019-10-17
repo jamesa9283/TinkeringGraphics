@@ -24,20 +24,19 @@ class LevelData(Enum):
     GRASS = auto()
     SKY = auto()
     DIRT = auto()
-    WELLLEFT = auto()
-    WELLRIGHT = auto()
-    SHRINE = auto()
     WATER = auto()
     POT = auto()
+    STONE = auto()
 
 
 __author__ = "Matthew Shaw"
 
 size_of_tiles = (16, 16)
-size_of_level = (300, 300)
+size_of_level = (100, 100)
 
 grass_height = 5
 
+dirtThreshold = 0.5
 
 LevelImages = ["" for x in range(len(LevelData))]
 
@@ -62,12 +61,16 @@ level_data = [[LevelData.SKY for y in range(size_of_level[1])] for x in range(si
 for x in range(size_of_level[0]):
     for y in range(size_of_level[1]):
         # Check if we need to place terrain
-        if perlinGenerator.noise2d(x/20, y/20) < 0.0001:
+        if (perlinGenerator.noise2d(x/20, y/20) + 1) / 2 < dirtThreshold:
+
             # If it is sky above here, then place grass
-            if perlinGenerator.noise2d(x/20, (y-1)/20) >= 0.0001:
+            if (perlinGenerator.noise2d(x/20, (y-1)/20) + 1) / 2 >= dirtThreshold:
                 level_data[x][y] = LevelData.GRASS
             else:
                 level_data[x][y] = LevelData.DIRT
+
+            if level_data[x][y] == LevelData.DIRT and level_data[x][y-1] == LevelData.DIRT and level_data[x][y-2] == LevelData.DIRT or level_data[x][y-1] == LevelData.STONE:
+                level_data[x][y] = LevelData.STONE
 
 # Add water
 for i in range(10000):
@@ -107,7 +110,7 @@ for i in range(10000):
         continue
 
 
-for i in range(3000):
+for i in range(10000):
     point = [random.randrange(0, size_of_level[0]), random.randrange(0, size_of_level[1])]
     try:
         if level_data[point[0]][point[1]] == LevelData.SKY and level_data[point[0]][point[1] + 1] == LevelData.GRASS:
