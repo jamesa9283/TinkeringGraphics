@@ -8,7 +8,7 @@ main_window = pygame.display.set_mode((500, 500))
 my_surface = pygame.image.load('Lizard.jpg').convert()
 
 
-def TriColourBlindness(surface, filename):
+def Tritanomaly(surface, filename):
     pixel = pygame.Color(0, 0, 0)
     for x in range(surface.get_width()):
         for y in range(surface.get_height()):
@@ -20,7 +20,7 @@ def TriColourBlindness(surface, filename):
     pygame.image.save(surface, filename)
 
 
-TriColourBlindness(my_surface, "tritanomaly.png")
+Tritanomaly(my_surface, "tritanomaly.png")
 
 running = True
 while running:
