@@ -12,7 +12,7 @@ def normal_to_colour_blind(_normal_colour: (int, int, int), conversion_list: lis
     return tuple([int(round(x*255)) for x in blind_colour])
 
 
-mode = 4 # Deuteranomaly Protanomaly Protanopia Deuteranopia Tritanopia Tritanomaly
+mode = 0 # Deuteranomaly Protanomaly Protanopia Deuteranopia Tritanopia Tritanomaly
 
 values = []
 valuesstr = tuple(open("blindnessValues.txt", 'r'))[mode]

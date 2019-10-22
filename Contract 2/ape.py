@@ -20,7 +20,7 @@ from opensimplex import OpenSimplex
 from datetime import datetime
 
 
-class LevelData(Enum):
+class LevelTiles(Enum):
     GRASS = auto()
     SKY = auto()
     DIRT = auto()
@@ -38,70 +38,70 @@ grass_height = 5
 
 dirtThreshold = 0.5
 
-LevelImages = ["" for x in range(len(LevelData))]
+# Create perlin noise generator with seed set to the current utc time (changing number make good random seed)
+perlin_generator = OpenSimplex(int(round((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds())))
 
-# Create perlin noise generator with seed set to the current utc time
-perlinGenerator = OpenSimplex(int(round((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds())))
+LevelImages = ["" for x in range(len(LevelTiles))]
 
 # Load all the images, by referencing the enum name
-for item in LevelData:
+for item in LevelTiles:
     try:
         LevelImages[item.value-1] = Image.open("data/" + item.name.lower() + ".png")
     except FileNotFoundError:
         print("File data/" + item.name.lower() + ".png could not be found. Is it in the correct folder, and named accordingly?")
         exit(1)
 
-
 # Create the final image to export
 level = Image.new('RGB', (size_of_tiles[0] * size_of_level[0], size_of_tiles[1] * size_of_level[1]), (82, 192, 255))
 
 # Create a list to hold the final level data, and initialise everything to sky
-level_data = [[LevelData.SKY for y in range(size_of_level[1])] for x in range(size_of_level[0])]
+level_data = [[LevelTiles.SKY for y in range(size_of_level[1])] for x in range(size_of_level[0])]
 
+# Create the base dirt/stone
 for x in range(size_of_level[0]):
     for y in range(size_of_level[1]):
         # Check if we need to place terrain
-        if (perlinGenerator.noise2d(x/20, y/20) + 1) / 2 < dirtThreshold:
+        if (perlin_generator.noise2d(x/20, y/20) + 1) / 2 < dirtThreshold:
 
             # If it is sky above here, then place grass
-            if (perlinGenerator.noise2d(x/20, (y-1)/20) + 1) / 2 >= dirtThreshold:
-                level_data[x][y] = LevelData.GRASS
+            if (perlin_generator.noise2d(x/20, (y-1)/20) + 1) / 2 >= dirtThreshold:
+                level_data[x][y] = LevelTiles.GRASS
             else:
-                level_data[x][y] = LevelData.DIRT
+                level_data[x][y] = LevelTiles.DIRT
 
-            if level_data[x][y] == LevelData.DIRT and level_data[x][y-1] == LevelData.DIRT and level_data[x][y-2] == LevelData.DIRT or level_data[x][y-1] == LevelData.STONE:
-                level_data[x][y] = LevelData.STONE
+            if level_data[x][y] == LevelTiles.DIRT and level_data[x][y - 1] == LevelTiles.DIRT and level_data[x][y - 2] == LevelTiles.DIRT or level_data[x][y - 1] == LevelTiles.STONE:
+                level_data[x][y] = LevelTiles.STONE
 
 # Add water
-for i in range(10000):
+for i in range(1000):
     point = [random.randrange(0, size_of_level[0]), random.randrange(0, size_of_level[1])]
     try:
-        if level_data[point[0]][point[1]] == LevelData.SKY and level_data[point[0]][point[1]+1] == LevelData.GRASS:
+        if level_data[point[0]][point[1]] == LevelTiles.STONE and level_data[point[0]][point[1] + 1] == LevelTiles.SKY:
             # We found sky, start making water
             while True:
                 try:
-                    while level_data[point[0]][point[1]+1] == LevelData.SKY or level_data[point[0]][point[1]+1] == LevelData.WATER:
+                    while level_data[point[0]][point[1]+1] == LevelTiles.SKY or level_data[point[0]][point[1] + 1] == LevelTiles.WATER:
                         point[1] += 1
-                        level_data[point[0]][point[1]] = LevelData.WATER
+                        level_data[point[0]][point[1]] = LevelTiles.WATER
 
-                    if level_data[point[0] + 1][point[1] + 1] == LevelData.SKY and level_data[point[0]][point[1]] == LevelData.GRASS:
-                        level_data[point[0]+1][point[1]] = LevelData.WATER
-                        level_data[point[0]+1][point[1]+1] = LevelData.WATER
+                    if level_data[point[0] + 1][point[1] + 1] == LevelTiles.SKY and level_data[point[0]][point[1]] == LevelTiles.GRASS:
+                        level_data[point[0]+1][point[1]] = LevelTiles.WATER
+                        level_data[point[0]+1][point[1]+1] = LevelTiles.WATER
                         point[0] += 1
                         point[1] += 1
 
-                    if level_data[point[0] - 1][point[1] + 1] == LevelData.SKY and level_data[point[0]][point[1]] == LevelData.GRASS:
-                        level_data[point[0] - 1][point[1]] = LevelData.WATER
-                        level_data[point[0] - 1][point[1] + 1] = LevelData.WATER
+                    if level_data[point[0] - 1][point[1] + 1] == LevelTiles.SKY and level_data[point[0]][point[1]] == LevelTiles.GRASS:
+                        level_data[point[0] - 1][point[1]] = LevelTiles.WATER
+                        level_data[point[0] - 1][point[1] + 1] = LevelTiles.WATER
                         point[0] -= 1
                         point[1] += 1
 
-                    if level_data[point[0]+1][point[1]] == LevelData.SKY:
+                    if level_data[point[0]+1][point[1]] == LevelTiles.SKY:
                         point[0] += 1
-                        level_data[point[0]][point[1]] = LevelData.WATER
-                    elif level_data[point[0]-1][point[1]] == LevelData.SKY:
+                        level_data[point[0]][point[1]] = LevelTiles.WATER
+                    elif level_data[point[0]-1][point[1]] == LevelTiles.SKY:
                         point[0] -= 1
-                        level_data[point[0]][point[1]] = LevelData.WATER
+                        level_data[point[0]][point[1]] = LevelTiles.WATER
                     else:
                         break
                 except IndexError:
@@ -109,12 +109,12 @@ for i in range(10000):
     except IndexError:
         continue
 
-
-for i in range(10000):
+# Add pots
+for i in range(1000):
     point = [random.randrange(0, size_of_level[0]), random.randrange(0, size_of_level[1])]
     try:
-        if level_data[point[0]][point[1]] == LevelData.SKY and level_data[point[0]][point[1] + 1] == LevelData.GRASS:
-            level_data[point[0]][point[1]] = LevelData.POT
+        if level_data[point[0]][point[1]] == LevelTiles.SKY and level_data[point[0]][point[1] + 1] == LevelTiles.GRASS:
+            level_data[point[0]][point[1]] = LevelTiles.POT
     except ValueError:
         continue
     except IndexError:
