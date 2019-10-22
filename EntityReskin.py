@@ -30,8 +30,8 @@ def set_color(img, mode): # removes 0 - red, 1 - green, 2 - blue, 3 - yellow
             else:
                 img.set_at((x, y), (pixel.r, pixel.g, pixel.b))
 
-            time.sleep(5)
-            save(img)
+            #time.sleep(5)
+            #save(img)
 
 
 def image(x, y):
@@ -62,3 +62,7 @@ while running:
     screen.fill(WHITE)
     image(img_x, img_y)
     pygame.display.flip()
+
+
+
+    
