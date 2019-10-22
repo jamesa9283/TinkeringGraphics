@@ -1,4 +1,5 @@
 # no sensitivity to blue light
+# code written by James Arthur
 
 import pygame
 pygame.init()

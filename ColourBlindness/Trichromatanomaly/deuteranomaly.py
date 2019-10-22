@@ -1,4 +1,5 @@
 # reduced sensitivity to green light
+# code written by James Arthur
 
 import pygame
 pygame.init()

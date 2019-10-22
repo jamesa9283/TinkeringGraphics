@@ -1,4 +1,5 @@
 # no colour vision
+# code written by James Arthur
 
 import pygame
 pygame.init()

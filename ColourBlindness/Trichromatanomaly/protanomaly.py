@@ -1,4 +1,5 @@
 # reduced sensitivity red light
+# code written by James Arthur
 
 import pygame
 pygame.init()
