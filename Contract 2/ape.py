@@ -8,13 +8,11 @@ as PIL > PyGame for these sorts of image editing tasks
 + Add support for Wells and Shrines
 + Add final graphics
 + Add argparse support
-* Add checking to see if the level already has an item at the chosen position
 + Add support for colour palettes 
 """
 
 from PIL import Image
 from enum import auto, Enum
-import argparse
 import random
 from opensimplex import OpenSimplex
 from datetime import datetime
