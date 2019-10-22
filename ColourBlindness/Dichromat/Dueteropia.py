@@ -1,3 +1,5 @@
+# no sensitivity to green light
+
 import pygame
 pygame.init()
 
@@ -11,7 +13,9 @@ def Deuteropia(surface, filename):
     for x in range(surface.get_width()):
         for y in range(surface.get_height()):
             pixel = surface.get_at((x, y))
+            # averages red and blue light
             pixelValue = (pixel.r + pixel.b)/2
+            # replaces green with averaged red and blue
             surface.set_at((x, y), (pixel.r, pixelValue, pixel.b))
     pygame.image.save(surface, filename)
 

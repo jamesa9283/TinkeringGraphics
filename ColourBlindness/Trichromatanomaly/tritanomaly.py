@@ -1,3 +1,5 @@
+# reduced sensitivity of blue light
+
 import pygame
 pygame.init()
 
@@ -11,7 +13,9 @@ def TriColourBlindness(surface, filename):
     for x in range(surface.get_width()):
         for y in range(surface.get_height()):
             pixel = surface.get_at((x, y))
+            # averaged blue and red light
             pixelValue = (pixel.b + pixel.r)/2
+            # replaces blue with averaged blue and red light
             surface.set_at((x, y), (pixel.r, pixel.g, pixelValue))
     pygame.image.save(surface, filename)
 

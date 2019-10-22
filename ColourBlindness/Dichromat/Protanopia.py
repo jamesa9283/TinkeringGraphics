@@ -1,3 +1,5 @@
+# no sensitivity to red light
+
 import pygame
 pygame.init()
 
@@ -11,7 +13,9 @@ def Protanopia(surface, filename):
     for x in range(surface.get_width()):
         for y in range(surface.get_height()):
             pixel = surface.get_at((x, y))
+            # averages green and blue
             pixelValue = (pixel.g + pixel.b)/2
+            # replaces red with green and blue
             surface.set_at((x, y), (pixelValue, pixel.g, pixel.b))
     pygame.image.save(surface, filename)
 

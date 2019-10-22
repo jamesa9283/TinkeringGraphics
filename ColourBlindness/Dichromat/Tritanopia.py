@@ -1,3 +1,5 @@
+# no sensitivity to blue light
+
 import pygame
 pygame.init()
 
@@ -11,7 +13,9 @@ def Tritanopia(surface, filename):
     for x in range(surface.get_width()):
         for y in range(surface.get_height()):
             pixel = surface.get_at((x, y))
+            # averages red and green light
             pixelValue = (pixel.r + pixel.g)/2
+            # replaces blue light with averaged red and green
             surface.set_at((x, y), (pixel.r, pixel.g, pixelValue))
     pygame.image.save(surface, filename)
 

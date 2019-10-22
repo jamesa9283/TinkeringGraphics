@@ -1,3 +1,5 @@
+# no colour vision
+
 import pygame
 pygame.init()
 
@@ -12,6 +14,7 @@ def Monochromat(surface, filename):
         for y in range(surface.get_height()):
             pixel = surface.get_at((x, y))
             pixelValue = (pixel.r + pixel.g + pixel.b)/3
+            # takes all the colours and averages
             surface.set_at((x, y), (pixelValue, pixelValue, pixelValue))
     pygame.image.save(surface, filename)
 
