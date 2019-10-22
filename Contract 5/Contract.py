@@ -1,6 +1,7 @@
 import colorsys
 from PIL import Image
-"""Contract #5, Completed by Matthew Shaw"""
+
+__author__ = "Matthew Shaw"
 
 
 def normal_to_colour_blind(_normal_colour: (int, int, int), conversion_list: list) -> (int, int, int):

@@ -17,6 +17,7 @@ import random
 from opensimplex import OpenSimplex
 from datetime import datetime
 
+__author__ = "Matthew Shaw"
 
 class LevelTiles(Enum):
     GRASS = auto()
@@ -26,8 +27,6 @@ class LevelTiles(Enum):
     POT = auto()
     STONE = auto()
 
-
-__author__ = "Matthew Shaw"
 
 size_of_tiles = (16, 16)
 size_of_level = (100, 100)

@@ -1,6 +1,8 @@
 from PIL import Image
 import colorsys
 
+__author__ = "Matthew Shaw"
+
 # Load in the reference conversion image
 img = Image.open("calibration.png").convert("RGB")
 imgData = img.load()
