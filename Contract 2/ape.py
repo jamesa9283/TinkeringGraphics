@@ -32,7 +32,7 @@ class LevelTiles(Enum):
 __author__ = "Matthew Shaw"
 
 size_of_tiles = (16, 16)
-size_of_level = (1000, 1000)
+size_of_level = (100, 100)
 
 grass_height = 5
 
@@ -61,14 +61,15 @@ level_data = [[LevelTiles.SKY for y in range(size_of_level[1])] for x in range(s
 for x in range(size_of_level[0]):
     for y in range(size_of_level[1]):
         # Check if we need to place terrain
-        if (perlin_generator.noise2d(x/20, y/20) + 1) / 2 < dirtThreshold:
+        if ((perlin_generator.noise2d(x/20, y/20) + perlin_generator.noise2d(x/50, y/50) + 1) / 2) < dirtThreshold:
 
             # If it is sky above here, then place grass
-            if (perlin_generator.noise2d(x/20, (y-1)/20) + 1) / 2 >= dirtThreshold:
+            if ((perlin_generator.noise2d(x/20, (y-1)/20) + perlin_generator.noise2d(x/50, (y-1)/50) + 1) / 2) >= dirtThreshold:
                 level_data[x][y] = LevelTiles.GRASS
             else:
                 level_data[x][y] = LevelTiles.DIRT
 
+            # If the three tiles above the current tile are all dirt, or the tile above is stone, make the current tile stone
             if level_data[x][y] == LevelTiles.DIRT and level_data[x][y - 1] == LevelTiles.DIRT and level_data[x][y - 2] == LevelTiles.DIRT or level_data[x][y - 1] == LevelTiles.STONE:
                 level_data[x][y] = LevelTiles.STONE
 
@@ -80,25 +81,31 @@ for i in range(1000):
             # We found sky, start making water
             while True:
                 try:
+                    # While the tile below the water is sky or water, create water below the current tile
                     while level_data[point[0]][point[1]+1] == LevelTiles.SKY or level_data[point[0]][point[1] + 1] == LevelTiles.WATER:
                         point[1] += 1
                         level_data[point[0]][point[1]] = LevelTiles.WATER
 
+                    # If the tile down and to the right is sky, and the tile below is water, make the right and down-right tile water
                     if level_data[point[0] + 1][point[1] + 1] == LevelTiles.SKY and level_data[point[0]][point[1]] == LevelTiles.GRASS:
                         level_data[point[0]+1][point[1]] = LevelTiles.WATER
                         level_data[point[0]+1][point[1]+1] = LevelTiles.WATER
                         point[0] += 1
                         point[1] += 1
 
-                    if level_data[point[0] - 1][point[1] + 1] == LevelTiles.SKY and level_data[point[0]][point[1]] == LevelTiles.GRASS:
+                    # If the tile down and to the left is sky, and the tile below is water, make the left and down-left tile water
+                    elif level_data[point[0] - 1][point[1] + 1] == LevelTiles.SKY and level_data[point[0]][point[1]] == LevelTiles.GRASS:
                         level_data[point[0] - 1][point[1]] = LevelTiles.WATER
                         level_data[point[0] - 1][point[1] + 1] = LevelTiles.WATER
                         point[0] -= 1
                         point[1] += 1
 
-                    if level_data[point[0]+1][point[1]] == LevelTiles.SKY:
+                    # If the tile to the right is sky, make the tile to the right water
+                    elif level_data[point[0]+1][point[1]] == LevelTiles.SKY:
                         point[0] += 1
                         level_data[point[0]][point[1]] = LevelTiles.WATER
+
+                    # If the tile to the left is sky, make the tile to the left water
                     elif level_data[point[0]-1][point[1]] == LevelTiles.SKY:
                         point[0] -= 1
                         level_data[point[0]][point[1]] = LevelTiles.WATER
