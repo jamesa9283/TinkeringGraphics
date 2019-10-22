@@ -1,25 +1,17 @@
-import sys
-import math
+import time
 import pygame
 
 WIDTH = 800
 HEIGHT = 640
 FPS = 60
 
-# Define Colors
 WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-
 img_x = 100
 img_y = 100
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("EntityReskin")
+pygame.display.set_caption("Entity Reskinning")
 clock = pygame.time.Clock()
 
 test_image = pygame.image.load('test.jpg')
@@ -38,9 +30,16 @@ def set_color(img, mode): # removes 0 - red, 1 - green, 2 - blue, 3 - yellow
             else:
                 img.set_at((x, y), (pixel.r, pixel.g, pixel.b))
 
+            time.sleep(5)
+            save(img)
+
 
 def image(x, y):
     screen.blit(test_image, (x, y))
+
+
+def save(surface):
+    pygame.image.save(surface, '_test.jpg')
 
 
 # Game loop
