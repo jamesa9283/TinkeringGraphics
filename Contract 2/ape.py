@@ -32,7 +32,7 @@ class LevelTiles(Enum):
 __author__ = "Matthew Shaw"
 
 size_of_tiles = (16, 16)
-size_of_level = (100, 100)
+size_of_level = (1000, 1000)
 
 grass_height = 5
 
