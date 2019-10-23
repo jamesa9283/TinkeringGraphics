@@ -26,6 +26,6 @@ I have used the MIT License because it allows me to keep part of my code private
 
 ### Copyright
 
-The copyright for the function code is Copyright James Arthur, tranfer agreements are possible, please get in [touch]{mailto:jsitesonline@gmail.com}.
+The copyright for the function code is Copyright James Arthur, tranfer agreements are possible, please get in [touch](mailto:jsitesonline@gmail.com).
 
 
