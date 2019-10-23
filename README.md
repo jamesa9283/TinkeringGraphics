@@ -20,7 +20,7 @@ Please note without Lizard.jpg, it wont run.
 4. Make sure pygame is installed
 5. It should now run
 
-##Licensing
+## Licensing
 
 I have used the MIT License because it allows me to keep part of my code private and it protects it from misuse that not under permission, but at the same time it allows a certain level of leeway for people to edit my code.
 
