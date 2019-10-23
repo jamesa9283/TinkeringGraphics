@@ -1,5 +1,7 @@
 # TinkeringGraphics
 
+The GitHub repository for this project can be found [here](https://github.com/jamesa9283/TinkeringGraphics).
+
 Matthew Shaw (ThaVoidUpdate) and I (James Arthur) discussed and produced code, we both chose different ways of attempting the problem.
 
 The code snippets has been adapted from Michael Scott's video tutorial.
