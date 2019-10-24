@@ -13,9 +13,9 @@ The programmes are written in python 3, the code and results can be found in Col
 ### How to run the code?
 1. Download and unzip the file
 2. Make sure that there is a file structure, such that:
-    "Mono/Di/Tri Chromat"
-        -> script.py  x3
-        -> Output.jpg x3
+    "Mono/Di/Tri Chromat"\
+        -> script.py  x3\
+        -> Output.jpg x3\
         -> Lizard.jpg
 Please note without Lizard.jpg, it wont run.
 3. Open pycharm or other IDE and setup the project and VE
